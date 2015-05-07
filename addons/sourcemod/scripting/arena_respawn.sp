@@ -978,6 +978,7 @@ public Action:Command_TeamBan(client, args) {
   
   if (IsValidClient(client) && team > _:TFTeam_Spectator) {
     team_ban[team - 2] = class;
+    if (GetConVarInt(cvar_tournament_blindbans) > 0 && team_ban[Team_EnemyTeam(team) - 2] != TFClass_Unknown) {
       Client_PrintToChat(client, true, "{G}Both teams have banned a class, bans are now LOCKED.");
     }
   }
