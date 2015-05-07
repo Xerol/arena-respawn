@@ -100,7 +100,7 @@ Tournament Mode functions well overall, but occasionally a round win will trigge
 
 Not all Arena maps are entirely plug-and-play. Some custom maps have made design decisions based on the rules of standard Arena that just don't work in **Arena: Respawn**, such as the train arriving late in Ferrous, the spawn doors shutting in Hardhat, or the point exploding and killing everyone in Blackwood Valley.
 
-Fortunately, the excellent [Stripper: Source](http://www.bailopan.net/stripper/) tool allows you to apply on-the-fly custom map fixes as the map loads. Install Stripper: Source and copy the [appropriate files](addons/stripper/maps) into your `addons/stripper/maps` directory.
+Fortunately, the excellent [Stripper: Source](http://www.bailopan.net/stripper/) tool allows you to apply on-the-fly custom map fixes as the map loads. Install Stripper: Source and copy the [appropriate files](addons/stripper/maps) into your `addons/stripper/maps` directory. (**Note:** You may need to download a [recent snapshot](http://www.bailopan.net/stripper/snapshots/1.2/) that works with recent versions of SourceMod.)
 
 **Note:** I have deliberately avoided working these special, per-map cases into the plugin (and will not accept merge requests that do so) for the following reasons:
 - While all per-map problems can be eventually be solved by SourceMod, this often involves tearing out elements of the map to do so. The Stripper: Source configuration files leave the map alone and modify its *functionality* instead of playing butcher to the hard work of a mapper.
