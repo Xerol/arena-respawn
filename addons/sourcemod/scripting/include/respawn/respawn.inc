@@ -204,7 +204,8 @@ stock Respawn_SetupCapPoints() {
 }
 
 /**
- * Sets up a team_round_timer tied to the map's team_control_point, which will reset after 50 seconds.
+ * Sets up a team_round_timer tied to the map's team_control_point, which will reset after 50 seconds
+ * (or whatever value is in cvar ars_doublecap_time). 
  * This allows double capping to force a win in case of a stalemate or hiding players.
  *
  * @noreturn

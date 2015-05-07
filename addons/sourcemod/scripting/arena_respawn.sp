@@ -17,7 +17,7 @@
 
 #pragma semicolon 1
 
-#define PLUGIN_VERSION "1.2.3-lb1"
+#define PLUGIN_VERSION "1.2.3-lb2"
 
 #include <sourcemod>
 #include <sdktools>
@@ -28,7 +28,7 @@
 public Plugin:myinfo = {
 
   name        = "Arena: Respawn",
-  author      = "awk",
+  author      = "awk (with updates by LAGBOT 30000)",
   description = "A gamemode that gives Arena second chances.",
   version     = PLUGIN_VERSION,
   url         = "http://steam.respawn.tf/"
