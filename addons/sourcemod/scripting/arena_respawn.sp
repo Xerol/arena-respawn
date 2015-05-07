@@ -17,7 +17,7 @@
 
 #pragma semicolon 1
 
-#define PLUGIN_VERSION "1.2.3-lb4"
+#define PLUGIN_VERSION "1.2.3-lb5"
 
 #include <sourcemod>
 #include <sdktools>
@@ -138,6 +138,9 @@ public OnPluginStart() {
   HookEvent("player_death", OnPlayerDeath);
   HookEvent("teamplay_game_over", OnGameOver);
   HookEvent("tf_game_over", OnGameOver);
+  
+  HookEvent("player_changeclass", OnChangeClass);
+  HookEvent("player_team", OnJoinTeam);
 
   RegConsoleCmd("sm_class", Command_ChangeClass);
   RegConsoleCmd("sm_ready", Command_TeamReady);
@@ -797,6 +800,26 @@ public OnPlayerDeath(Handle:event, const String:name[], bool:hide_broadcast) {
   }
 
 }
+
+
+//Fired when a player changes class.
+public OnChangeClass(Handle:event, const String:name[], bool:hide_broadcast) {
+  if (!Respawn_Enabled() || state != GameState_Tournament) return;
+  
+  new player = GetClientOfUserId(GetEventInt(event, "userid"));
+  
+  Respawn_CheckPlayerClass(player);
+}
+
+//Fired when a player joins a team
+public OnJoinTeam(Handle:event, const String:name[], bool:hide_broadcast) {
+  if (!Respawn_Enabled() || state != GameState_Tournament) return;
+  
+  new player = GetClientOfUserId(GetEventInt(event, "userid"));
+  
+  Respawn_CheckPlayerClass(player);
+}
+
 
 // Fired when a game has ended because win conditions were met.
 public OnGameOver(Handle:event, const String:name[], bool:hide_broadcast) {

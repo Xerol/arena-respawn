@@ -658,6 +658,64 @@ stock bool:Respawn_CheckTeamReadyState(team) {
 }
 
 /**
+ * Checks if a player joining a team or changing class
+ * is eligible to join that class. If player is joining
+ * an invalid class (banned or duplicate), force player
+ * onto an unused class.
+ *
+ * @noreturn
+ */
+stock Respawn_CheckPlayerClass(player) {
+  new TFClassType:player_class = TF2_GetPlayerClass(player);
+  new player_team = GetClientTeam(player);
+  
+  new bool:classes_used[10];
+  
+  //First, index all the players on the team (skip if team is not red or blu)
+    
+  if (player_team == _:TFTeam_Red || player_team == _:TFTeam_Blue) {
+    for (new i = 1; i <= MaxClients; i++) {
+      if (!IsValidClient(i) || GetClientTeam(i) != player_team || i == player) {
+        continue;
+      }
+      classes_used[TF2_GetPlayerClass(i)] = true;
+    }
+  }
+  
+  //Check if the player is playing the same class as someone else on the team.
+  if (!classes_used[player_class]) {
+    //All's good, let's get out of here.
+    return;
+  }
+  
+  //Uh oh, someone's cheating.
+  //Let's do something about that.
+  for (new i = 1; i <= 9; i++) {
+    //Go through all the classes in enumerated order.
+    //(This is not the same as the in-game order but is easy to do.)
+    
+    if (!classes_used[i]) {
+      //Found an empty class
+      //Check if it's banned
+      if (i == _:team_ban[0] || i == _:team_ban[1]) {
+        continue;
+      }
+      
+      //Open class that's not banned, time to stick this player there.
+      TF2_SetPlayerClass(player, TFClassType:i);
+      return;
+    }
+  }
+    
+  //Couldn't find a slot for the player. This probably should never
+  //happen unless you're playing an 8v8 for some reason.
+  //So back to spec you go.
+    
+  ChangeClientTeam(player, _:TFTeam_Spectator);
+  
+}
+
+/**
  * (Experimental) Set up spawns for 5cp play.
  *
  * @noreturn
