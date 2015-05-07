@@ -163,6 +163,8 @@ public Action:Timer_DrawHUD(Handle:timer) {
     // Prepare class ban text
     if (team_ban[team - 2] == TFClass_Unknown) {
       ban = "NONE";
+    } else if (GetConVarInt(cvar_tournament_blindbans) > 0 && state == GameState_PreTournament) {
+      ban = "HIDDEN";
     } else {
       Class_GetName(team_ban[team - 2], ban, sizeof(ban));
       ban[0] &= ~(1 << 5); // Capitalize the name of the banned class

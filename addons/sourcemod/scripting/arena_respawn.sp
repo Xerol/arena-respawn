@@ -17,7 +17,7 @@
 
 #pragma semicolon 1
 
-#define PLUGIN_VERSION "1.2.3-lb3"
+#define PLUGIN_VERSION "1.2.3-lb4"
 
 #include <sourcemod>
 #include <sdktools>
@@ -60,6 +60,10 @@ new Handle:cvar_lms_minicrits         = INVALID_HANDLE;
 new Handle:cvar_logging               = INVALID_HANDLE;
 new Handle:cvar_autorecord            = INVALID_HANDLE;
 new Handle:cvar_doublecap_time        = INVALID_HANDLE;
+
+// Ban System ConVars
+new Handle:cvar_tournament_blindbans  = INVALID_HANDLE;
+
 
 new cap_owner = 0;
 new mid_index = 2;
@@ -177,6 +181,10 @@ public OnPluginStart() {
 
   cvar_doublecap_time = CreateConVar("ars_doublecap_time", "51",
     "Sets amount of time point must be held to enable double capping.");
+
+  cvar_tournament_blindbans = CreateConVar("ars_tournament_blindbans", "0", 
+    "Turns blind bans on or off. Blind bans will not be revealed to the other team until both teams are ready; duplicate bans are allowed when blind bans are enabled.");
+
 
   for (new i = 0; i < 2; i++) {
     hud[i] = CreateHudSynchronizer();
@@ -893,10 +901,15 @@ public Action:Command_TeamReady(client, args) {
     Client_PrintToChat(client, true, "{G}Not in pre-tournament mode!");
     return Plugin_Handled;
   }
-
+  
   new team = GetClientTeam(client);
   if (IsValidClient(client) && team > _:TFTeam_Spectator) {
-    team_ready[team - 2] = true;
+    // If blind bans are enabled, don't allow readying up until both teams have banned.
+    if (GetConVarInt(cvar_tournament_blindbans) > 0 && (team_ban[0] == TFClass_Unknown || team_ban[1] == TFClass_Unknown)) {
+      Client_PrintToChat(client, true, "{G}Cannot ready until both teams have banned a class!");
+    } else {
+      team_ready[team - 2] = true;
+    }
   }
 
   if (Respawn_CheckTeamReadyState(GetClientTeam(client))) {
@@ -955,7 +968,7 @@ public Action:Command_TeamBan(client, args) {
   if (class == TFClass_Unknown) {
     Client_PrintToChat(client, true, "{G}Invalid input.");
     return Plugin_Handled;
-  } else if (class == team_ban[Team_EnemyTeam(team) - 2]) {
+  } else if ((class == team_ban[Team_EnemyTeam(team) - 2]) && !GetConVarInt(cvar_tournament_blindbans)) {
     Client_PrintToChat(client, true, "{G}That class is already banned!");
     return Plugin_Handled;
   }
