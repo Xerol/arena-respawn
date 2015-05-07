@@ -234,11 +234,17 @@ stock Respawn_CreateCapTimer() {
   DispatchKeyValue(timer, "start_paused", "0");
   DispatchKeyValue(timer, "auto_countdown", "0");
 
+  // Get the value of ars_doublecap_time into a string so we can pass it into the timer.
+  
+  decl String:doublecap_time[8];
+  GetConVarString(ars_doublecap_time, doublecap_time, 8);
+
   if (Game_CountCapPoints() == 5) {
     DispatchKeyValue(timer, "timer_length", "31");
   } else {
-    DispatchKeyValue(timer, "timer_length", "51");
+    DispatchKeyValue(timer, "timer_length", doublecap_time);
   }
+  
 
   DispatchSpawn(timer);
 

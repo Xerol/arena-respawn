@@ -59,6 +59,7 @@ new Handle:cvar_lms_critboost         = INVALID_HANDLE;
 new Handle:cvar_lms_minicrits         = INVALID_HANDLE;
 new Handle:cvar_logging               = INVALID_HANDLE;
 new Handle:cvar_autorecord            = INVALID_HANDLE;
+new Handle:cvar_doublecap_time        = INVALID_HANDLE;
 
 new cap_owner = 0;
 new mid_index = 2;
@@ -173,6 +174,9 @@ public OnPluginStart() {
 
   cvar_autorecord = CreateConVar("ars_autorecord", "0",
     "Set to 1 to automatically record tournaments (SourceTV must be enabled).");
+
+  cvar_doublecap_time = CreateConVar("ars_doublecap_time", "51",
+    "Sets amount of time point must be held to enable double capping.");
 
   for (new i = 0; i < 2; i++) {
     hud[i] = CreateHudSynchronizer();
