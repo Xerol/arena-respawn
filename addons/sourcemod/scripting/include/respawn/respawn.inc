@@ -633,7 +633,7 @@ stock bool:Respawn_CheckTeamReadyState(team) {
       team_ready[team - 2] = false;
       return false;
 
-    } else if ((class == team_ban[team - 2] || class == team_ban[Team_EnemyTeam(team) - 2]) && !GetConVarInt(cvar_tournament_blindbans))  {
+    } else if (class == team_ban[team - 2] || class == team_ban[Team_EnemyTeam(team) - 2])  {
 
       Client_PrintToChatAll(true, "Team {%s}%s{N} is not ready - {G}%s{N} is playing a banned class (%s). Use {G}!class{N} to change.",
         team_color, team_name, player_name, class_name);
