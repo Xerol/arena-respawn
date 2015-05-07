@@ -971,10 +971,15 @@ public Action:Command_TeamBan(client, args) {
   } else if ((class == team_ban[Team_EnemyTeam(team) - 2]) && !GetConVarInt(cvar_tournament_blindbans)) {
     Client_PrintToChat(client, true, "{G}That class is already banned!");
     return Plugin_Handled;
+  } else if (GetConVarInt(cvar_tournament_blindbans) > 0 && team_ban[0] != TFClass_Unknown && team_ban[1] != TFClass_Unknown) {
+    Client_PrintToChat(client, true, "{G}Bans are LOCKED, cannot change ban.");
+    return Plugin_Handled;
   }
   
   if (IsValidClient(client) && team > _:TFTeam_Spectator) {
     team_ban[team - 2] = class;
+      Client_PrintToChat(client, true, "{G}Both teams have banned a class, bans are now LOCKED.");
+    }
   }
 
   Respawn_CheckTournamentState();
