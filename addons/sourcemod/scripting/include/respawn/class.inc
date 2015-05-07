@@ -33,18 +33,24 @@ stock TFClassType:Class_GetFromName(const String:classname[]) {
 
   if (StrContains(classname, "scout", false) > -1
       || StrContains(classname, "scoot", false) > -1
-      || StrContains(classname, "boston", false) > -1) {
+      || StrContains(classname, "fast", false) > -1
+      || StrContains(classname, "boston", false) > -1
+      || StrContains(classname, "baseball", false) > -1
+      && StrContains(classname, "fat", false) < 0) {
     return TFClass_Scout;
 
   } else if (StrContains(classname, "sniper", false) > -1
             || StrContains(classname, "longshoot", false) > -1
-            || StrContains(classname, "australian", false) > -1
+            || StrContains(classname, "australia", false) > -1
             || StrContains(classname, "new zealand", false) > -1) {
     return TFClass_Sniper;
 
   } else if (StrContains(classname, "soldier", false) > -1
              || StrContains(classname, "solly", false) > -1
              || StrContains(classname, "american", false) > -1
+             || StrContains(classname, "army", false) > -1
+             || StrContains(classname, "marine", false) > -1
+             || StrContains(classname, "shovel", false) > -1
              || (StrContains(classname, "rocket", false) > -1 && StrContains(classname, "w/o rocket", false) < 0)) {
     return TFClass_Soldier;
 
@@ -62,11 +68,13 @@ stock TFClassType:Class_GetFromName(const String:classname[]) {
 
   } else if (StrContains(classname, "heavy", false) > -1
              || StrContains(classname, "hoovy", false) > -1
+             || StrContains(classname, "fat", false) > -1
              || StrContains(classname, "russia", false) > -1) {
     return TFClass_Heavy;
 
   } else if (StrContains(classname, "pyro", false) > -1
              || StrContains(classname, "hudda", false) > -1
+             || StrContains(classname, "flame", false) > -1
              || StrContains(classname, "fire", false) > -1) {
     return TFClass_Pyro;
 
@@ -79,7 +87,7 @@ stock TFClassType:Class_GetFromName(const String:classname[]) {
 
   } else if (StrContains(classname, "engi", false) > -1
              || StrContains(classname, "neer", false) > -1
-             || StrContains(classname, "builder", false) > -1
+             || StrContains(classname, "build", false) > -1
              || StrContains(classname, "texas", false) > -1
              || StrContains(classname, "sentry", false) > -1) {
     return TFClass_Engineer;
