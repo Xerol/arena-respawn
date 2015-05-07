@@ -1,8 +1,12 @@
-<p align="center"><img src="https://raw.githubusercontent.com/awkisopen/arena-respawn/master/media/arena_respawn_brand_512.png" alt="Arena: Respawn" width="350px" /><br /><h2 align="center"><a href="http://steamcommunity.com/groups/ArenaRespawn">Steam Group</a> &bull; <a href="http://wiki.respawn.tf">Wiki</a> &bull; <a href ="https://github.com/awkisopen/arena-respawn/raw/master/addons/sourcemod/plugins/arena_respawn.smx">Plugin Download</a></h2></p>
+<p align="center"><img src="https://raw.githubusercontent.com/awkisopen/arena-respawn/master/media/arena_respawn_brand_512.png" alt="Arena: Respawn" width="350px" /><br /><h2 align="center"><a href="http://steamcommunity.com/groups/ArenaRespawn">Steam Group</a> &bull; <a href="http://wiki.respawn.tf">Wiki</a> &bull; <a href ="https://github.com/Xerol/arena-respawn/raw/master/addons/sourcemod/plugins/arena_respawn.smx">Plugin Download</a></h2></p>
 
 **Arena: Respawn** is a custom gamemode for [Team Fortress 2](http://www.teamfortress.com). Like Arena mode, the primary objective is to kill the other team before they kill yours. Unlike Arena mode, players can be respawned mid-round if a teammate captures the central control point.
 
 This simple rule change has proven to be an interesting addition to the Arena gamemode, as mentioned in the [Official Team Fortress 2 blog](http://www.teamfortress.com/post.php?id=14487). If you'd like to try it out before installing, hop into a [server near you](http://steam.respawn.tf) and give it a spin.
+
+## Before you download
+
+This is a fork of awk's A:R plugin, intended to test changes internally. You're free to use this version, but keep in mind there may be untested modifications, bugs, or outright crashes if you attempt to use this version.
 
 ## Use and installation
 
@@ -59,6 +63,12 @@ For the Last Man Standing, a death on the opposing team will result in a critboo
 
 If set to `1`, replaces the Last Man Standing critboost with a minicrit boost.
 
+#### `ars_doublecap_time`
+**Default value (Public):** `51`  
+**Default value (Tournament):** `31`
+ 
+Controls the amount of time between a point being captured and the point becoming available to double cap (for an instant win). 
+ 
 ## Extra stuff
 
 ### Running a 5v5 Arena: Respawn tournament
@@ -112,3 +122,9 @@ You'll need [smlib](https://www.sourcemodplugins.org/smlib/) and the source file
 If you create a modified version of **Arena: Respawn** to run on a public server, you must release the source of your modified code under the terms of the [AGPL](LICENSE.txt). This way, **Arena: Respawn** remains an open gamemode that all server owners can benefit from, instead of a select few keeping potentially new and interesting changes to themselves.
 
 **Arena: Respawn** has always been intended to be a plugin open for the entire TF2 community to experiment with, so play nice and keep it that way.
+
+### LAGBOT's Notes
+
+You will need an older version of sourcemod to compile the plugin (and possibly run it). The current release of smlib linked above does not seem to work at all for compiling A:R, due to requiring the Entity_AddOutput function. The current version [on github](https://github.com/bcserv/smlib) does have this function and works. The as-compiled plugin does not seem to work with SM 1.7 or above, so for now all builds and testing are being done with the last build of 1.6. Additionally, download links for SM versions prior to 1.7 are no longer listed on the main sourcemod site, but are still available [here](http://www.sourcemod.net/smdrop/1.6/). I managed to get the plugin to compile with sourcemod-1.6.4-git4625-windows.zip from that directory.
+
+I have yet to try building under SM 1.7 or later, but I think the problem was with the old smlib version. There are also as-yet-unresolved issues with getting the proper metamod and stripper versions to work, but that is outside the scope of making changes to the plugin which this fork is focused on.
