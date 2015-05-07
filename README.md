@@ -68,6 +68,11 @@ If set to `1`, replaces the Last Man Standing critboost with a minicrit boost.
 **Default value (Tournament):** `31`
  
 Controls the amount of time between a point being captured and the point becoming available to double cap (for an instant win). 
+
+#### `ars_tournament_blindbans`
+**Default value:** `0`
+
+This feature is experimental. Set to `1` to enable. Bans now display as "HIDDEN" when made, and neither team can ready until both teams have set a ban. Duplicate bans are allowed, leaving 8 out of the 9 classes available for play in that match.
  
 ## Extra stuff
 
