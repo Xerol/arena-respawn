@@ -143,6 +143,7 @@ public OnPluginStart() {
   HookEvent("player_changeclass", OnChangeClass);
   HookEvent("player_team", OnJoinTeam);
 
+  //Tournament System Commands
   RegConsoleCmd("sm_class", Command_ChangeClass);
   RegConsoleCmd("sm_ready", Command_TeamReady);
   RegConsoleCmd("sm_unready", Command_TeamUnReady);
@@ -150,6 +151,12 @@ public OnPluginStart() {
   RegConsoleCmd("sm_teamname", Command_TeamName);
   RegAdminCmd("ars_tournament_start", Command_StartTournament, ADMFLAG_CONFIG);
   RegAdminCmd("ars_tournament_stop", Command_StopTournament, ADMFLAG_CONFIG);
+  RegAdminCmd("ars_bluban_clear", Command_ClearBluBan, ADMFLAG_CONFIG);
+  RegAdminCmd("ars_blueban_clear", Command_ClearBluBan, ADMFLAG_CONFIG);
+  RegAdminCmd("ars_redban_clear", Command_ClearRedBan, ADMFLAG_CONFIG);
+  RegAdminCmd("ars_bluban_set", Command_SetBluBan, ADMFLAG_CONFIG);
+  RegAdminCmd("ars_blueban_set", Command_SetBluBan, ADMFLAG_CONFIG);
+  RegAdminCmd("ars_redban_set", Command_SetRedBan, ADMFLAG_CONFIG);
 
   cvar_arena = FindConVar("tf_gamemode_arena");
   cvar_first_blood = FindConVar("tf_arena_first_blood");
@@ -1098,4 +1105,70 @@ public Action:Command_StopTournament(client, args) {
 
   return Plugin_Handled;
 
+}
+
+
+// Admin command - Clears BLU's ban
+public Action:Command_ClearBluBan(client, args) {
+  
+  if (!Respawn_Enabled()) return Plugin_Handled;
+  
+  team_ban[_:TFTeam_Blue - 2] = _:TFClass_Unknown;
+  
+  Respawn_CheckTournamentState();
+  
+  return Plugin_Handled;
+}
+
+// Admin command - Clears RED's ban
+public Action:Command_ClearRedBan(client, args) {
+  
+  if (!Respawn_Enabled()) return Plugin_Handled;
+  
+  team_ban[_:TFTeam_Red - 2] = _:TFClass_Unknown;
+  
+  Respawn_CheckTournamentState();
+  
+  return Plugin_Handled;
+}
+
+
+// Admin command - Sets BLU's ban
+public Action:Command_SetBluBan(client, args) {
+  
+  if (!Respawn_Enabled()) return Plugin_Handled;
+  
+  new String:classname[32];
+  
+  GetCmdArg(1, classname, sizeof(classname));
+  
+  new TFClassType:class = Class_GetFromName(classname);
+  if (class == TFClass_Unknown) {
+    PrintToConsole(client, "Class not recognized.");
+    return Plugin_Handled;
+  }
+    
+  team_ban[_:TFTeam_Blue - 2] = _:class;
+  
+  return Plugin_Handled;
+}
+
+// Admin command - Sets RED's ban
+public Action:Command_SetRedBan(client, args) {
+  
+  if (!Respawn_Enabled()) return Plugin_Handled;
+  
+  new String:classname[32];
+  
+  GetCmdArg(1, classname, sizeof(classname));
+  
+  new TFClassType:class = Class_GetFromName(classname);
+  if (class == TFClass_Unknown) {
+    PrintToConsole(client, "Class not recognized.");
+    return Plugin_Handled;
+  }
+    
+  team_ban[_:TFTeam_Red - 2] = _:class;
+  
+  return Plugin_Handled;
 }
