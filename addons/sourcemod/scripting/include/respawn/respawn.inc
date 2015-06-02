@@ -526,6 +526,12 @@ stock Respawn_CheckTournamentState() {
   }
 
   new bool:cancel = false;
+  
+  // Cancel now if an admin start is required and the admin has not yet readied.
+  
+  if (!team_ready[2]) {
+    cancel = true;
+  }
 
   // Otherwise, check if both teams are ready and have banned a class.
   for (new i = 0; i < 2; i++) {
@@ -612,11 +618,7 @@ stock bool:Respawn_CheckTeamReadyState(team) {
     GetConVarString(FindConVar("mp_tournament_blueteamname"), team_name, sizeof(team_name));
   }
   
-  // Check once if an admin start is required.
-  
-  if (team_ready[2] == false) {
-    return false;
-  }
+
 
   // Ensure that:
   // This team has locked in their class ban;

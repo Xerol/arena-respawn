@@ -1196,7 +1196,17 @@ public Action:Command_BeginTournament(client, args) {
     return Plugin_Handled;
   }
   
-  team_ready[2] = true;
+  // Disallow a forced start if bans are not in.
+  
+  if (team_ban[0] == TFClass_Unknown || team_ban[1] == TFClass_Unknown) {
+    PrintToConsole(client, "Can't start because one or more teams does not have a class ban. Use ars_redban_set or ars_bluban_set to set bans for the appropriate team(s).")
+  } 
+  
+  // Set all teams to ready
+  
+  for (new i = 0; i < 2; i++) {
+    team_ready[i] = true;
+  }
   
   Respawn_CheckTournamentState();
   
