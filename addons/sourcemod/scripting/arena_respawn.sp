@@ -65,6 +65,7 @@ new Handle:cvar_doublecap_time        = INVALID_HANDLE;
 new Handle:cvar_tournament_blindbans  = INVALID_HANDLE;
 new Handle:cvar_tournament_medicbans  = INVALID_HANDLE;
 new Handle:cvar_tournament_banlocks   = INVALID_HANDLE;
+new Handle:cvar_tournament_adminstart = INVALID_HANDLE;
 
 new cap_owner = 0;
 new mid_index = 2;
@@ -85,7 +86,7 @@ new roundstat_players_respawned[2];
 
 // Tournament variables
 new GameState:state = GameState_Public;
-new bool:team_ready[2] = { false, ... };
+new bool:team_ready[3] = { false, ... };
 new TFClassType:team_ban[2] = { TFClass_Unknown, ... };
 new Handle:hud[2] = { INVALID_HANDLE, ... };
 new Handle:hud_middle = INVALID_HANDLE;
@@ -157,6 +158,7 @@ public OnPluginStart() {
   RegAdminCmd("ars_bluban_set", Command_SetBluBan, ADMFLAG_CONFIG);
   RegAdminCmd("ars_blueban_set", Command_SetBluBan, ADMFLAG_CONFIG);
   RegAdminCmd("ars_redban_set", Command_SetRedBan, ADMFLAG_CONFIG);
+  RegAdminCmd("ars_tournament_begin", Command_BeginTournament, ADMFLAG_CONFIG);
 
   cvar_arena = FindConVar("tf_gamemode_arena");
   cvar_first_blood = FindConVar("tf_arena_first_blood");
@@ -201,6 +203,9 @@ public OnPluginStart() {
   
   cvar_tournament_banlocks = CreateConVar("ars_tournament_banlocks", "0", 
     "If enabled (set to 1), bans cannot be changed by players once entered. Admins are able to clear a team's ban with the ars_[team]ban functions.");
+
+  cvar_tournament_adminstart = CreateConVar("ars_tournament_adminstart", "0", 
+    "If enabled (set to 1), the match will not automatically start once both teams are ready, but instead wait for an admin to run the ars_tournament_begin command.");
 
   for (new i = 0; i < 2; i++) {
     hud[i] = CreateHudSynchronizer();
@@ -1080,6 +1085,14 @@ public Action:Command_StartTournament(client, args) {
     team_ready[i] = false;
     team_ban[i] = TFClass_Unknown;
   }
+  
+  
+  // If tournament requires an admin start, set "admin team" to not ready.
+  if (GetConVarInt(cvar_tournament_adminstart) > 0) {
+    team_ready[2] = false;
+  } else {
+    team_ready[2] = true;
+  }
 
   ServerCommand("mp_tournament 0 ; exec sourcemod/respawn.pretournament.cfg");
 
@@ -1169,6 +1182,23 @@ public Action:Command_SetRedBan(client, args) {
   }
     
   team_ban[_:TFTeam_Red - 2] = _:class;
+  
+  return Plugin_Handled;
+}
+
+// Admin command - begin a tournament mode match.
+public Action:Command_BeginTournament(client, args) {
+  
+  if (!Respawn_Enabled()) return Plugin_Handled;
+  
+  if (state != GameState_PreTournament) {
+    PrintToConsole(client, "Can't start when not in pre-tournament mode!");
+    return Plugin_Handled;
+  }
+  
+  team_ready[2] = true;
+  
+  Respawn_CheckTournamentState();
   
   return Plugin_Handled;
 }

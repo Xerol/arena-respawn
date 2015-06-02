@@ -611,6 +611,12 @@ stock bool:Respawn_CheckTeamReadyState(team) {
     team_color = "B";
     GetConVarString(FindConVar("mp_tournament_blueteamname"), team_name, sizeof(team_name));
   }
+  
+  // Check once if an admin start is required.
+  
+  if (team_ready[2] == false) {
+    return false;
+  }
 
   // Ensure that:
   // This team has locked in their class ban;
