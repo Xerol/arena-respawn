@@ -826,6 +826,10 @@ public OnChangeClass(Handle:event, const String:name[], bool:hide_broadcast) {
   
   new player = GetClientOfUserId(GetEventInt(event, "userid"));
   
+  //Debug
+  new TFClassType:player_class = TF2_GetPlayerClass(player);
+  Log("Player %s changed to class %s", player, player_class);
+  
   Respawn_CheckPlayerClass(player);
 }
 
@@ -834,6 +838,22 @@ public OnJoinTeam(Handle:event, const String:name[], bool:hide_broadcast) {
   if (!Respawn_Enabled() || state != GameState_Tournament) return;
   
   new player = GetClientOfUserId(GetEventInt(event, "userid"));
+  
+  //Debug
+  new player_team = GetClientTeam(player);
+  Log("Player %s joined team %s", player, player_team);
+  
+  Respawn_CheckPlayerClass(player);
+}
+
+//Fired when a player spawns
+public OnPlayerSpawn(Handle:event, const String:name[], bool:hide_broadcast) {
+  if (!Respawn_Enabled() || state != GameState_Tournament) return;
+  
+  new player = GetClientOfUserId(GetEventInt(event, "userid"));
+  
+  //Debug
+  Log("Player %s spawned.", player);
   
   Respawn_CheckPlayerClass(player);
 }

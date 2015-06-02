@@ -680,6 +680,8 @@ stock Respawn_CheckPlayerClass(player) {
   
   new bool:classes_used[10];
   
+  Log("Player %s triggered a class check.", player);
+  
   //First, index all the players on the team (skip if team is not red or blu)
     
   if (player_team == _:TFTeam_Red || player_team == _:TFTeam_Blue) {
@@ -691,11 +693,21 @@ stock Respawn_CheckPlayerClass(player) {
     }
   }
   
+  //Also fill in the bans
+  classes_used[_:team_ban[0]] = true;
+  classes_used[_:team_ban[1]] = true;
+  
+  Log("Classes used: %s %s %s %s %s %s %s %s %s", classes_used[1], classes_used[2], classes_used[3],
+    classes_used[4], classes_used[5], classes_used[6], classes_used[7], classes_used[8], classes_used[9]);
+  
   //Check if the player is playing the same class as someone else on the team.
   if (!classes_used[player_class]) {
     //All's good, let's get out of here.
+    Log("Player is playing a valid class.");
     return;
   }
+  
+  Log("Player is not playing a valid class.");
   
   //Uh oh, someone's cheating.
   //Let's do something about that.
@@ -704,13 +716,8 @@ stock Respawn_CheckPlayerClass(player) {
     //(This is not the same as the in-game order but is easy to do.)
     
     if (!classes_used[i]) {
-      //Found an empty class
-      //Check if it's banned
-      if (i == _:team_ban[0] || i == _:team_ban[1]) {
-        continue;
-      }
-      
       //Open class that's not banned, time to stick this player there.
+      Log("Setting player to class %s.", i);
       TF2_SetPlayerClass(player, TFClassType:i);
       return;
     }
