@@ -241,6 +241,7 @@ stock Respawn_CreateCapTimer() {
   GetConVarString(cvar_doublecap_time, doublecap_time, 8);
 
   if (Game_CountCapPoints() == 5) {
+    //This is not used currently, leaving it in for backwards compatibility with awk's version
     DispatchKeyValue(timer, "timer_length", "31");
   } else {
     DispatchKeyValue(timer, "timer_length", doublecap_time);

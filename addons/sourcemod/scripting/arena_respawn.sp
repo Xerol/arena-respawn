@@ -61,9 +61,10 @@ new Handle:cvar_logging               = INVALID_HANDLE;
 new Handle:cvar_autorecord            = INVALID_HANDLE;
 new Handle:cvar_doublecap_time        = INVALID_HANDLE;
 
-// Ban System ConVars
+// Tournament System ConVars
 new Handle:cvar_tournament_blindbans  = INVALID_HANDLE;
-
+new Handle:cvar_tournament_medicbans  = INVALID_HANDLE;
+new Handle:cvar_tournament_banlocks   = INVALID_HANDLE;
 
 new cap_owner = 0;
 new mid_index = 2;
@@ -188,6 +189,11 @@ public OnPluginStart() {
   cvar_tournament_blindbans = CreateConVar("ars_tournament_blindbans", "0", 
     "Turns blind bans on or off. Blind bans will not be revealed to the other team until both teams are ready; duplicate bans are allowed when blind bans are enabled.");
 
+  cvar_tournament_medicbans = CreateConVar("ars_tournament_medicbans", "1", 
+    "Allows medic to be banned. Set to 0 to disallow medic from being banned.");
+  
+  cvar_tournament_banlocks = CreateConVar("ars_tournament_banlocks", "0", 
+    "If enabled (set to 1), bans cannot be changed by players once entered. Admins are able to clear a team's ban with the ars_[team]ban functions.");
 
   for (new i = 0; i < 2; i++) {
     hud[i] = CreateHudSynchronizer();
@@ -989,13 +995,24 @@ public Action:Command_TeamBan(client, args) {
 
   new TFClassType:class = Class_GetFromName(classname);
   if (class == TFClass_Unknown) {
+    //Can't ban a class if we don't know what class it is.
     Client_PrintToChat(client, true, "{G}Invalid input.");
     return Plugin_Handled;
+  } else if (!GetConVarInt(cvar_tournament_medicbans) && class == TFClass_Medic) {
+    //Don't allow a medic ban if it's disallowed in the config.
+    Client_PrintToChat(client, true, "{G}Medic cannot be banned.");
+    return Plugin_Handled;
   } else if ((class == team_ban[Team_EnemyTeam(team) - 2]) && !GetConVarInt(cvar_tournament_blindbans)) {
+    //If blind bans are off, disallow repeat bans.
     Client_PrintToChat(client, true, "{G}That class is already banned!");
     return Plugin_Handled;
   } else if (GetConVarInt(cvar_tournament_blindbans) > 0 && team_ban[0] != TFClass_Unknown && team_ban[1] != TFClass_Unknown) {
+    //If blind bans are on, disallow changing bans once both teams have banned.
     Client_PrintToChat(client, true, "{G}Bans are LOCKED, cannot change ban.");
+    return Plugin_Handled;
+  } else if (GetConVarInt(cvar_tournament_banlocks) > 0 && team_ban[team - 2] != TFClass_Unknown) {
+    //If ban locks are on, also disallow changing bans once a ban has been entered.
+    Client_PrintToChat(client, true, "{G}You cannot change bans once entered.");
     return Plugin_Handled;
   }
   
