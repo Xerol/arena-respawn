@@ -159,6 +159,10 @@ public OnPluginStart() {
   RegAdminCmd("ars_blueban_set", Command_SetBluBan, ADMFLAG_CONFIG);
   RegAdminCmd("ars_redban_set", Command_SetRedBan, ADMFLAG_CONFIG);
   RegAdminCmd("ars_tournament_begin", Command_BeginTournament, ADMFLAG_CONFIG);
+  RegAdminCmd("ars_redscore_add", Command_AddRedScore, ADMFLAG_CONFIG);
+  RegAdminCmd("ars_bluscore_add", Command_AddBluScore, ADMFLAG_CONFIG);
+  RegAdminCmd("ars_bluescore_add", Command_AddBluScore, ADMFLAG_CONFIG);
+  
 
   cvar_arena = FindConVar("tf_gamemode_arena");
   cvar_first_blood = FindConVar("tf_arena_first_blood");
@@ -1247,3 +1251,60 @@ public Action:Command_BeginTournament(client, args) {
   
   return Plugin_Handled;
 }
+
+// Admin command - Add points to red's score.
+
+public Action:Command_AddRedScore(client, args) {
+  
+  if (!Respawn_Enabled()) return Plugin_Handled;
+  
+  if (state != GameState_PreTournament) {
+    PrintToConsole(client, "Can't start when not in pre-tournament mode!");
+    return Plugin_Handled;
+  }
+  
+  new String:amount[8];
+  new score;
+  new diff;
+  
+  GetCmdArg(1, amount, sizeof(amount));
+  
+  score = GetTeamScore(_:TFTeam_Red);
+  diff = StringToInt(amount);
+  
+  score = score + diff;
+  
+  SetTeamScore(_:TFTeam_Red, score);
+  
+  return Plugin_Handled;
+  
+}
+
+
+// Admin command - Add points to blu's score.
+
+public Action:Command_AddBluScore(client, args) {
+  
+  if (!Respawn_Enabled()) return Plugin_Handled;
+  
+  if (state != GameState_PreTournament) {
+    PrintToConsole(client, "Can't start when not in pre-tournament mode!");
+    return Plugin_Handled;
+  }
+  
+  new String:amount[8];
+  new score;
+  new diff;
+  
+  GetCmdArg(1, amount, sizeof(amount));
+  
+  score = GetTeamScore(_:TFTeam_Blue);
+  diff = StringToInt(amount);
+  
+  score = score + diff;
+  
+  SetTeamScore(_:TFTeam_Blue, score);
+  
+  return Plugin_Handled;
+  
+} 
