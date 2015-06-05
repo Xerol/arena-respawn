@@ -17,7 +17,7 @@
 
 #pragma semicolon 1
 
-#define PLUGIN_VERSION "1.2.3-lb5"
+#define PLUGIN_VERSION "1.2.3-lb7"
 
 #include <sourcemod>
 #include <sdktools>
@@ -1219,16 +1219,31 @@ public Action:Command_BeginTournament(client, args) {
   // Disallow a forced start if bans are not in.
   
   if (team_ban[0] == TFClass_Unknown || team_ban[1] == TFClass_Unknown) {
-    PrintToConsole(client, "Can't start because one or more teams does not have a class ban. Use ars_redban_set or ars_bluban_set to set bans for the appropriate team(s).")
+    PrintToConsole(client, "Can't start because one or more teams does not have a class ban. Use ars_redban_set or ars_bluban_set to set bans for the appropriate team(s).");
   } 
   
   // Set all teams to ready
   
   for (new i = 0; i < 2; i++) {
-    team_ready[i] = true;
+    // Check ready state for Red and Blu teams
+   
+    if (i < 2) {
+      if (Respawn_CheckTeamReadyState(i)) {
+        team_ready[i] = true;
+      } else {
+        team_ready[i] = false;
+      }
+    } else {  // Admin is ready, since they're initiating this command.
+      team_ready[i] = true;
+    }
   }
   
-  Respawn_CheckTournamentState();
+  // If all teams are ready then try to kick it off.
+  if (team_ready[0] && team_ready[1] && team_ready[2]) {
+    Respawn_CheckTournamentState();
+  } else {
+    return Plugin_Handled;
+  }
   
   return Plugin_Handled;
 }
