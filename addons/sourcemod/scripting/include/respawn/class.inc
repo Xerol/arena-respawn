@@ -31,18 +31,19 @@
  */
 stock TFClassType:Class_GetFromName(const String:classname[]) {
 
-  if (StrContains(classname, "scout", false) > -1
+  if ((StrContains(classname, "scout", false) > -1
       || StrContains(classname, "scoot", false) > -1
       || StrContains(classname, "fast", false) > -1
       || StrContains(classname, "boston", false) > -1
-      || StrContains(classname, "baseball", false) > -1
+      || StrContains(classname, "baseball", false) > -1)
       && StrContains(classname, "fat", false) < 0) {
     return TFClass_Scout;
 
   } else if (StrContains(classname, "sniper", false) > -1
             || StrContains(classname, "longshoot", false) > -1
+            || StrContains(classname, "upside down", false) > -1
             || StrContains(classname, "australia", false) > -1
-            || StrContains(classname, "new zealand", false) > -1) {
+            || StrContains(classname, "zealand", false) > -1) {
     return TFClass_Sniper;
 
   } else if (StrContains(classname, "soldier", false) > -1
@@ -60,7 +61,7 @@ stock TFClassType:Class_GetFromName(const String:classname[]) {
              || StrContains(classname, "explo", false) > -1) {
     return TFClass_DemoMan;
 
-  } else if (StrContains(classname, "medic", false) > -1
+  } else if (StrContains(classname, "med", false) > -1
              || StrContains(classname, "german", false) > -1
              || StrContains(classname, "doctor", false) > -1
              || StrContains(classname, "heal", false) > -1) {
@@ -88,7 +89,7 @@ stock TFClassType:Class_GetFromName(const String:classname[]) {
   } else if (StrContains(classname, "engi", false) > -1
              || StrContains(classname, "neer", false) > -1
              || StrContains(classname, "build", false) > -1
-             || StrContains(classname, "texas", false) > -1
+             || StrContains(classname, "tex", false) > -1
              || StrContains(classname, "sentry", false) > -1) {
     return TFClass_Engineer;
 

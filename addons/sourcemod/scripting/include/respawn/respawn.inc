@@ -616,6 +616,8 @@ stock bool:Respawn_CheckTeamReadyState(team) {
   } else if (team == _:TFTeam_Blue) {
     team_color = "B";
     GetConVarString(FindConVar("mp_tournament_blueteamname"), team_name, sizeof(team_name));
+  } else {
+    return team_ready[team];
   }
   
 

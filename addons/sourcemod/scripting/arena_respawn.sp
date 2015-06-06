@@ -930,8 +930,12 @@ public Action:Command_ChangeClass(client, args) {
 
   // If we're not in tournament mode, do nothing.
   if (state != GameState_PreTournament) {
-    Client_PrintToChat(client, true, "{G}Not in pre-tournament mode!");
-    return Plugin_Handled;
+    if (state == GameState_Tournament) {
+      Client_PrintToChat(client, true, "{G}Use the standard class change during the match.");
+    } else {
+      Client_PrintToChat(client, true, "{G}Not in pre-tournament mode!");
+      return Plugin_Handled;
+    }
   }
 
   // If no class was mentioned, return.
@@ -945,7 +949,7 @@ public Action:Command_ChangeClass(client, args) {
 
   new TFClassType:class = Class_GetFromName(classname);
   if (class == TFClass_Unknown) {
-    Client_PrintToChat(client, true, "{G}Invalid input.");
+    Client_PrintToChat(client, true, "{G}Sorry, I didn't recognize that class name.");
     return Plugin_Handled;
   }
 
@@ -1220,6 +1224,8 @@ public Action:Command_BeginTournament(client, args) {
     return Plugin_Handled;
   }
   
+  decl String:message[128];
+  
   // Disallow a forced start if bans are not in.
   
   if (team_ban[0] == TFClass_Unknown || team_ban[1] == TFClass_Unknown) {
@@ -1228,22 +1234,28 @@ public Action:Command_BeginTournament(client, args) {
   
   // Set all teams to ready
   
-  for (new i = 0; i < 2; i++) {
+  for (new i = 0; i < 3; i++) {
     // Check ready state for Red and Blu teams
-   
+    team_ready[i] = true;
     if (i < 2) {
       if (Respawn_CheckTeamReadyState(i)) {
         team_ready[i] = true;
+        Format(message, sizeof(message), "Team %i is Ready.", i);
+        PrintToConsole(client, message);
       } else {
         team_ready[i] = false;
+        Format(message, sizeof(message), "Team %i cannot be readied.", i);
+        PrintToConsole(client, message);
       }
     } else {  // Admin is ready, since they're initiating this command.
       team_ready[i] = true;
+      PrintToConsole(client, "Admin is Ready.");
     }
   }
   
   // If all teams are ready then try to kick it off.
   if (team_ready[0] && team_ready[1] && team_ready[2]) {
+    PrintToConsole(client, "Everyone appears to be Ready, let's try to start.");
     Respawn_CheckTournamentState();
   } else {
     return Plugin_Handled;
@@ -1258,8 +1270,8 @@ public Action:Command_AddRedScore(client, args) {
   
   if (!Respawn_Enabled()) return Plugin_Handled;
   
-  if (state != GameState_PreTournament) {
-    PrintToConsole(client, "Can't start when not in pre-tournament mode!");
+  if (state != GameState_Tournament) {
+    PrintToConsole(client, "Can't change score when tournament is not running!");
     return Plugin_Handled;
   }
   
@@ -1287,8 +1299,8 @@ public Action:Command_AddBluScore(client, args) {
   
   if (!Respawn_Enabled()) return Plugin_Handled;
   
-  if (state != GameState_PreTournament) {
-    PrintToConsole(client, "Can't start when not in pre-tournament mode!");
+  if (state != GameState_Tournament) {
+    PrintToConsole(client, "Can't change score when tournament is not running!");
     return Plugin_Handled;
   }
   
