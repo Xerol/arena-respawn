@@ -529,7 +529,7 @@ stock Respawn_CheckTournamentState() {
   
   // Cancel now if an admin start is required and the admin has not yet readied.
   
-  if (!team_ready[2]) {
+  if (GetConVarInt(cvar_tournament_adminstart) > 0 && !team_ready[2]) {
     cancel = true;
   }
 
