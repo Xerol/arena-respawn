@@ -17,7 +17,7 @@
 
 #pragma semicolon 1
 
-#define PLUGIN_VERSION "1.3.0-beta"
+#define PLUGIN_VERSION "1.3.0a-beta"
 
 #include <sourcemod>
 #include <sdktools>
@@ -932,6 +932,7 @@ public Action:Command_ChangeClass(client, args) {
   if (state != GameState_PreTournament) {
     if (state == GameState_Tournament) {
       Client_PrintToChat(client, true, "{G}Use the standard class change during the match.");
+      return Plugin_Handled;
     } else {
       Client_PrintToChat(client, true, "{G}Not in pre-tournament mode!");
       return Plugin_Handled;
